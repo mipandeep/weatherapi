@@ -1,6 +1,8 @@
 import urllib.request
 import json
 import sqlite3
+import time
+from datetime import datetime
 
 conn = sqlite3.connect('weatherapi.sqlite3')
 cur = conn.cursor()
@@ -15,7 +17,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS WEATHERDATA (TemperatureInCelsius FLOA
                                                         windSpeed INT ,
                                                         weatherDegrees INT ,
                                                         weatherCondition VARCHAR(50) ,
-                                                        weatherConditionDiscription VARCHAR(50) )''')
+                                                        weatherConditionDiscription VARCHAR(50),
+                                                        DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S', 'now', 'localtime')) )''')
 
 urlData = "https://api.openweathermap.org/data/2.5/weather?q=Winnipeg,Canada&appid=cb6ac7001aec44c5a80bb270d3e71e69"
 
@@ -36,6 +39,12 @@ temp_maxInCelsius = theJSON["main"]["temp_max"]-273
 temp_minInFahrenheit = (temp_minInCelsius * 1.8)+32
 temp_maxInFahrenheit = (temp_maxInCelsius * 1.8)+32
 
+# def localtimestr_to_utctime(local_time_str):
+#     gateway_original_time_str = local_time_str
+#     gateway_format_time_str = datetime.strptime(gateway_original_time_str, "%Y-%m-%dT%H:%M:%S")
+#     gateway_time = gateway_format_time_str.timetuple()
+#     gateway_time_stamp = time.mktime(gateway_time)
+#     return datetime.utcfromtimestamp(gateway_time_stamp)
 # query = ("INSERT INTO WEATHERDATA(ID,Temperature,Humidity,Pressure,WindSpeed) VALUES ( "+  (weatherconditiondiscription), (weatherconditiondiscription)  , (weatherconditiondiscription) ,(weatherconditiondiscription) ,(weatherconditiondiscription)+")")
 
 query = "INSERT INTO WEATHERDATA(TemperatureInCelsius,TemperatureInFahrenheit,Humidity,Pressure,temp_min_InCelsius,temp_min_InFahrenheit,temp_max_InCelcious,temp_max_InFahrenheit,windSpeed,weatherDegrees,weatherCondition,weatherConditionDiscription) " \
